@@ -1,13 +1,19 @@
+from clean.models import Review
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
+from . models import Review
+from . forms import Edit_review
 # Create your views here.
 
 def index(request):
-    return render(request,'home.html')
+    review = Review.objects.all()
+    #print(review)
+    context ={'reviews':review}
+    return render(request,'home.html',context)
 
 def user_register(request):
     if request.method=='POST':
@@ -45,8 +51,50 @@ def user_login(request):
             login(request, user)
             return redirect('/')
         else:
-            messages.warning(request,'User is not registered')
-            return redirect('register')
-            
-            
+            messages.warning(request,'Invalid credentials')
+            return redirect('login') 
+               
     return render(request,'login.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('/')
+
+
+def post_review(request):
+    if request.method=="POST":
+        name = request.POST.get('name')
+        review = request.POST.get('review')
+        #print(name,review)
+        review = Review(name=name,review=review,user_id=request.user)
+        review.save()
+        messages.success(request,'review has been posted successfully')
+        return redirect('/')
+        
+    return render(request,'review.html')
+
+
+def review_details(request,id):
+    review = Review.objects.get(id=id) 
+    #print(review) 
+    context = {'review':review}  
+    return render(request,'review_details.html',context)
+
+def delete(request,id):
+    review = Review.objects.get(id=id) 
+    #print(review) 
+    review.delete()
+    messages.success(request,"review has been deleted")
+    return redirect('/')
+
+def edit(request,id):
+    review = Review.objects.get(id=id) 
+    #print(review) 
+    editreview = Edit_review(instance=review)
+    if request.method=='POST':
+        form = Edit_review(request.POST,instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'post has been updated')
+            return redirect('/')
+    return render(request,'edit_review.html',{'edit_review':editreview})
