@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>edit review</title>
+    <style>
+    input[type='text']{width:50%;border: 2px solid black;border-radius:4px;}
+    textarea{width:50%;border: 2px solid black;border-radius:4px;}
+    input[type='submit']{width:10%}
+    </style>
+  </head>
+  <center><h1>Edit Review</h1><center>
+  
+  <body>
+    <form method="POST" class='my-3'>
+    {% csrf_token %}
+    {{edit_review.as_p}}
+    <input type='submit' value='Edit' class='btn btn-primary'>
+    </form>
+</body>
+</html>
