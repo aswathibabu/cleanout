@@ -1,3 +1,4 @@
+from os import name
 from clean.models import Review
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
@@ -11,6 +12,7 @@ from . models import Review
 from . forms import Edit_review
 from . forms import Booking_form
 from django.views import View
+from . models import  myuploadfile
 
 # Create your views here.
 
@@ -19,6 +21,22 @@ def index(request):
     #print(review)
     context ={'reviews':review}
     return render(request,'home.html',context)
+
+
+def send_files(request):
+    if request.method == "POST":
+        #user_name = request.POST.get("name")
+        file_name = request.POST.get("filename")
+        myfile = request.FILES.getlist("uploadfiles")
+        
+        for f in myfile:
+            myuploadfile(f_name=file_name,myfiles=f).save()
+            
+        print(myfile)
+        #return HttpResponse("ok")
+        #return render(request,'')
+        return redirect('/')
+
 
 def user_register(request):
     if request.method=='POST':
