@@ -39,4 +39,18 @@ class myuploadfile(models.Model):
         return self.f_name
     
     
+class SlotTime(models.Model):
+    title = models.CharField(max_length=100)
     
+    
+    def __str__(self):
+        return self.title
+    
+class BookSlot(models.Model):
+    name = models.CharField(max_length=100,null=False)
+    email = models.EmailField(null=False)
+    phone = models.IntegerField(null=False)
+    address = models.TextField(null=False)
+    
+    slot = models.ForeignKey(SlotTime,on_delete=models.CASCADE)
+        

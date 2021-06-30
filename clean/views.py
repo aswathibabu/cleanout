@@ -1,18 +1,77 @@
 from os import name
-from clean.models import Review
-from django.http.response import HttpResponse
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from clean . models import Review
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login,logout
-from django.contrib.auth.forms import PasswordChangeForm
-from . models import Review
-#from . models import Booking
-from . forms import Edit_review
+from django.contrib.auth.forms import PasswordChangeForm,AuthenticationForm
+from . models import BookSlot, Booking, Review
+from . models import Booking
+from . forms import Edit_review, SlotForm
 from . forms import Booking_form
 from django.views import View
 from . models import  myuploadfile
+from django.contrib.auth.decorators import login_required
+from django.views.generic import FormView
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+from django.http.response import JsonResponse # new
+from django.views.decorators.csrf import csrf_exempt # new
+import stripe
+
+
+
+
+# @csrf_exempt
+# def stripe_config(request):
+#     if request.method == 'GET':
+#         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+#         return JsonResponse(stripe_config, safe=False)
+    
+    
+# @csrf_exempt
+# def create_checkout_session(request):
+#     if request.method == 'GET':
+#         domain_url = 'http://localhost:8000/'
+#         stripe.api_key = settings.STRIPE_SECRET_KEY
+#         try:
+#             # Create new Checkout Session for the order
+#             # Other optional params include:
+#             # [billing_address_collection] - to display billing address details on the page
+#             # [customer] - if you have an existing Stripe Customer ID
+#             # [payment_intent_data] - capture the payment later
+#             # [customer_email] - prefill the email input in the form
+#             # For full details see https://stripe.com/docs/api/checkout/sessions/create
+
+#             # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+#             checkout_session = stripe.checkout.Session.create(
+#                 success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+#                 cancel_url=domain_url + 'cancelled/',
+#                 payment_method_types=['card'],
+#                 mode='payment',
+#                 line_items=[
+#                     {
+#                         'name': 'T-shirt',
+#                         'quantity': 1,
+#                         'currency': 'usd',
+#                         'amount': '2000',
+#                     }
+#                 ]
+#             )
+#             return JsonResponse({'sessionId': checkout_session['id']})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)})    
+    
+    
+    
+    
+
 
 # Create your views here.
 
@@ -66,7 +125,11 @@ def user_register(request):
     return render(request,'register.html')
 
 def user_login(request):
+    # import pdb
+    # pdb.set_trace()
     if request.method=="POST":
+        
+    
         username =request.POST.get('username')
         password =request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -79,10 +142,13 @@ def user_login(request):
                
     return render(request,'login.html')
 
+
+
 def user_logout(request):
     logout(request)
     return redirect('/')
 
+#@login_required
 
 def post_review(request):
     if request.method=="POST":
@@ -122,6 +188,8 @@ def edit(request,id):
             return redirect('/')
     return render(request,'edit_review.html',{'edit_review':editreview})
 
+#@login_required
+
 def booking_form(request):
     form = Booking_form()
     if request.method=='POST':
@@ -130,8 +198,48 @@ def booking_form(request):
             form.save()
             messages.success(request,'Booking has been successfully...Thank you for using cleanout service...')
             return redirect('/')
-    return render(request,'booking.html',{'form':form})
+    book = Booking.objects.all()
+    return render(request,'booking.html',{'form':form, 'bk':book})
 
+
+
+
+# def bookslot_form(request):
+#     form = SlotForm()
+#     if request.method=='POST':
+#         form = SlotForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request,'Booking has been successfully...Thank you for using cleanout service...')
+#             return redirect('/')
+#     book = BookSlot.objects.all()
+#     return render(request,'slotbook.html',{'form':form, 'bk':book})
+
+def bookslot_form(request):
+    return render(request,'slotbook.html')
+
+
+
+
+def delete_booking(request, id):
+    if request.method == 'POST':
+        book = Booking.objects.get(id=id)
+        book.delete()
+        return HttpResponseRedirect('/')
+    
+    
+def update_booking(request):
+    return render(request,'edit_booking.html', {'id':id})
+
+                
+    
+''' def delete(request,id):
+        review = Review.objects.get(id=id) 
+        #print(review) 
+        review.delete()
+        messages.success(request,"review has been deleted")
+        return redirect('/')'''
+   
 
 def change_password(request):
     if request.method=='POST':
@@ -158,4 +266,14 @@ def change_password(request):
         u.save()
         messages.success(request,'Password has been changed')
         return redirect('/')'''
-        
+
+
+# def slotbook(request):
+#     return render(request,'slotbook.html')
+
+
+def order(request):
+    return render(request,'slot.html')
+
+def join(request):
+    return render(request,'join.html')
