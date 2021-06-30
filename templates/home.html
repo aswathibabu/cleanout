@@ -1,7 +1,7 @@
 {% extends 'base.html' %}  <!--extends from base.html-->
 
 {% block title %}
-<title>home page</title>
+<title>Cleanout Home Page</title>
 {% endblock title %}
 
 {% block body %}
@@ -17,6 +17,18 @@
 <!--<h1>Home Page</h1>-->
 <div class="container my-3">
 
+
+
+
+
+
+
+
+
+
+
+
+
     {% load static %} <img src="{% static "/home/aswathi/Desktop/cleanout/static/img/waste-container.jpg" %}">
 
     <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
@@ -28,6 +40,27 @@
       <!--<p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>-->
     </div>
   </div>
+
+
+
+  <!--file uploads ....-->
+<br>
+<form action="{% url 'clean:uploads' %}" method="POST" enctype="multipart/form-data">
+  <h6>upload your images here</h6>
+  <input type="text" name="name" placeholder="enter your name"><br>
+  <br>
+  <input type="text" name="filename" placeholder="enter your file name">
+  <input type="file" multiple name="uploadfiles">
+  {% csrf_token %}
+  <button type="submit"> File Upload</button>
+
+</form>
+<br>
+
+{% comment %} <a href="{% url "slotorder" %}">order your slot here</a> {% endcomment %}
+
+
+
   
   <div class="row mb-2">
    {% for review in reviews %}

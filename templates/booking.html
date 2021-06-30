@@ -5,13 +5,47 @@
 {% endblock title %}
 
 {% block body %}
-<h1 class='text-center'> Booking Form</h1>
+
+<div class ="row">
+<div class="col-sm-4">
+<br>
+<h3 class='text-center alert alert-info'> Booking Form</h3>
 <div class="container">
 <form action='booking_form' method="POST">
 {% csrf_token %}
 {{form.as_p}}
 <div class="container">
-<input type="submit" value="Book now" class="btn btn-primary"><br>
+
+
+<input type="submit" value="Book now" class="btn btn-primary">
+{% comment %} <input type='submit' value='Payment' class='btn btn-primary'> {% endcomment %}
+<br>
+<p><a href="{% url 'order' %}" style="text-decoration:none;">Payment</a></p> 
+<br>
+
+<br>
+
+</div>
+</div>
+
+
+
+
+
+
+<!--file uploads ....
+
+<form action="" method="POST" enctype="multipart/form-data">
+
+  <input type="text" name="filename" placeholder="enter your file name">
+  <input type="file">
+  <button type="submit"> File Upload</button>
+
+</form>
+<br>-->
+<br>
+
+
 <p><b>NB:</b>
 <b>slots :</b> MG(morning 9.00-12.00),AN(afternoon 1.00-6.00),NT(night 6.00-7.00)<br>
 <br>
@@ -19,5 +53,69 @@
 <br>
 <b>vehicle :<br></b>1) cycle(<50kgs)<br>2) tata ace(50-500kg)<br>3) tata eicher(500-3000kg)<br>4)truck(>3000kg)<br></p>
 </form>
+
+<br>
 </div>
+<!--optional<div class="col-sm-7 offset-1">-->
+<div class="col-sm-8">
+<br>
+<h3 class='text-center alert alert-info'>Booking Details</h3>
+{% if bk %}
+
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Address</th>
+        <th scope="col">Slot</th>
+        <th scope="col">Type_waste</th>
+        <th scope="col">Vehicle</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for b in bk %}
+      <tr>
+        <th scope="row">{{b.id}}</th>
+        <td>{{b.name}}</td>
+        <td>{{b.email}}</td>
+        <td>{{b.phone}}</td>
+        <td>{{b.address}}</td>
+        <td>{{b.slot}}</td>
+        <td>{{b.type_waste}}</td>
+        <td>{{b.vehicle}}</td>
+
+        <td>
+        <a href="" class="btn btn-warning btn-sm">Edit</a><br>
+        <form action="" method="post" class="d-inline">{% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        
+        </form>
+        <!--<a href="#" class="btn btn-danger btn-sm">Delete</a>-->
+
+        </td>
+
+
+      </tr>
+    {% endfor %}
+  
+    </tbody>
+  </table>
+
+
+  <!--<h4>Table Data</h4>-->
+
+{% else %}
+  <h4 class='text-center alert alert-warning'>No Records</h4>
+{% endif %}
+
+
+</div>
+
+
 {% endblock body %}

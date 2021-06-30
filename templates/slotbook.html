@@ -1,0 +1,88 @@
+{% comment %} <h1>select your slot</h1> {% endcomment %}
+
+
+{% comment %} {% extends 'base.html' %}  <!--extends from base.html-->
+
+{% block title %}
+<title>booking page</title>
+{% endblock title %}
+
+{% block body %}
+
+<div class ="row">
+<div class="col-sm-4">
+<br>
+<h3 class='text-center alert alert-info'> Booking Form</h3>
+<div class="container">
+<form action='bookslot_form' method="POST">
+{% csrf_token %}
+{{form.as_p}}
+<div class="container">
+<input type="submit" value="Book now" class="btn btn-primary"> {% endcomment %}
+{% comment %} <input type='submit' value='Payment' class='btn btn-primary'> {% endcomment %}
+{% comment %} <br>
+<p><a href="" style="text-decoration:none;">Payment</a></p> 
+<br>
+
+<br>
+
+</div>
+</div>
+
+
+{% endblock body %} {% endcomment %}
+
+
+<h1>Book your slots here</h1>
+
+<form action="{% url 'order'%}" method="post">
+{% csrf_token %}
+
+<label for="name">Name:</label>
+    <input id="name" type="text" name="username">
+<br>
+<br>
+<label for="email">Email:</label>
+    <input id="email" type="text" name="useremail">
+<br>
+<br>
+<label for="address">Address:</label>
+    <input id="address" type="text" name="useraddress">
+
+<br>
+<br>
+<label for="slot">Slot:</label>
+    <select id="slot" name="slot">
+        <option value="morning">Morning(9.00-12.00)</option>
+        <option value="morning">Afternoon(12.00-4.00)</option>
+        <option value="morning">Night(4.00-8.00)</option>
+
+    </select>
+<br>
+<br>
+
+<label for="slot">Type_waste:</label>
+    <select id="slot" name="slot">
+        <option value="liquid">Liquid waste</option>
+        <option value="solid">Solid waste</option>
+        <option value="organic">Organic waste</option>
+        <option value="recycle">Recyclable waste</option>
+        
+
+    </select>
+<br>
+<br>
+
+<label for="slot">Vehicle:</label>
+    <select id="slot" name="slot">
+        <option value="cycle">cycle(<50kg)</option>
+        <option value="tata ace"> tata ace(50-500kg)</option>
+        <option value="tata eicher">tata eicher(500-3000kg)</option>
+        <option value="truck">truck(>3000kg)</option>
+
+    </select>
+<input type="submit" value="Book now">      
+
+</form>
+
+{% comment %} <p><a href="{% url 'order' %}" style="text-decoration:none;">Payment</a></p>  {% endcomment %}

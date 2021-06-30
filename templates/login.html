@@ -1,5 +1,7 @@
 {% extends 'base.html' %}  <!--extends from base.html-->
 
+{% load socialaccount %}
+
 {% block title %}
 <title>login page</title>
 {% endblock title %}
@@ -15,6 +17,7 @@
 
 <div class="container">
 
+
 <form action='login' method='POST'>
     {% csrf_token %}
   <div class="row g-3">
@@ -27,7 +30,7 @@
     <input type="text" class="form-control" id="inputAddress" placeholder="Username" name='username'>
   </div>
 
-  
+  <br>
 
   <div class="col-md-12">
     <label for="inputCity" class="form-label">Password</label>
@@ -36,12 +39,18 @@
 
   
   
+
   
-  
-  <div class="col-12">
+  <div class="col-6">
     <button type="submit" class="btn btn-primary">Login</button>
   </div>
+
+ <p><a href="" style="text-decoration:none;">Forgotten your password?</a></p> 
+ <a href="{% provider_login_url 'google' %}">Login With Google</a>
+
 </form>
+
+
 </div>
 
 {% endblock body %}

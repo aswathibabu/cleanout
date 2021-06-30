@@ -24,7 +24,10 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
 
+        
+
         {% if user.is_authenticated%}
+        
         <li class="nav-item">
           <a class="nav-link" href="logout">{{request.user.username}}</a>
         </li>
@@ -36,6 +39,16 @@
         <li class="nav-item">
           <a class="nav-link" href="change_password">Change Password</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="send_files"></a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="bookslot_form">slot Booking</a>
+        </li>
+
+
 
 
 
